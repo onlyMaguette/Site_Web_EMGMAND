@@ -1,0 +1,63 @@
+﻿@model EMGMAND.Models.Car
+
+@{
+    ViewData["Title"] = Model.Id == 0 ? "Ajouter une voiture" : "Modifier une voiture";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="SaveCar" method="post">
+    <div class="form-group">
+        <label for="BrandId">Marque</label>
+        <select id="BrandId" name="BrandId" class="form-control" asp-for="BrandId">
+            <option value="">--Sélectionner une marque--</option>
+            @foreach (var brand in ViewBag.CarBrands as List<EMGMAND.Models.CarBrand>)
+            {
+                <option value="@brand.Id">@brand.Name</option>
+            }
+        </select>
+        <span asp-validation-for="BrandId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Model">Modèle</label>
+        <input type="text" id="Model" name="Model" class="form-control" asp-for="Model" />
+        <span asp-validation-for="Model" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Year">Année</label>
+        <input type="number" id="Year" name="Year" class="form-control" asp-for="Year" min="2010" />
+        <span asp-validation-for="Year" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="ManufactureDate">Date de fabrication</label>
+        <input type="date" id="ManufactureDate" name="ManufactureDate" class="form-control" asp-for="ManufactureDate" />
+        <span asp-validation-for="ManufactureDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Description">Description</label>
+        <textarea id="Description" name="Description" class="form-control" asp-for="Description"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="PhotoPath">Photo</label>
+        <input type="text" id="PhotoPath" name="PhotoPath" class="form-control" asp-for="PhotoPath" />
+        <span asp-validation-for="PhotoPath" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="IsSold">Vendu</label>
+        <input type="checkbox" id="IsSold" name="IsSold" asp-for="IsSold" />
+    </div>
+
+    <div class="form-group">
+        <label for="IsAvailable">Disponible</label>
+        <input type="checkbox" id="IsAvailable" name="IsAvailable" asp-for="IsAvailable" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+</form>

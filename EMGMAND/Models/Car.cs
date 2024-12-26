@@ -30,7 +30,10 @@ public class Car
     [Required(ErrorMessage = "Veuillez spécifier si la voiture est disponible.")]
     public bool IsAvailable { get; set; } // Indique si la voiture est disponible à la vente.
 
-    [Required(ErrorMessage = "La date doit être sélectionnée correctement.")]
-    public DateTime DateAdded { get; set; } // Date d'ajout de la voiture
+    // Ajouter la propriété ManufactureDate ici
+    [Required(ErrorMessage = "La date de fabrication est obligatoire.")]
+    [DataType(DataType.Date)]
+    [Display(Name = "Date de fabrication")]
+    public DateTime ManufactureDate { get; set; }
 
 }
