@@ -36,4 +36,15 @@ public class Car
     [Display(Name = "Date de fabrication")]
     public DateTime ManufactureDate { get; set; }
 
+    // Constructeur pour initialiser les propriétés non-nullables
+    public Car(int brandId, string model, int year, bool isSold, bool isAvailable, DateTime manufactureDate)
+    {
+        BrandId = brandId;
+        Model = model;
+        Year = year;
+        IsSold = isSold;
+        IsAvailable = isAvailable;
+        ManufactureDate = manufactureDate;
+    }
+
 }
