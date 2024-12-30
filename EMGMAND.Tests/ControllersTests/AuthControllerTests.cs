@@ -2,13 +2,15 @@ using Xunit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using EMGMAND.Data;
 using System.Security.Claims;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authentication;
 using System;
+using System.Collections.Generic;
 
 namespace EMGMAND.Tests.ControllersTests
 {
@@ -41,8 +43,8 @@ namespace EMGMAND.Tests.ControllersTests
                 new List<IPasswordValidator<IdentityUser>>(),
                 new UpperInvariantLookupNormalizer(),
                 new IdentityErrorDescriber(),
-                null, // Pas de serviceProvider requis
-                null // Pas de logger requis
+                new Mock<IServiceProvider>().Object, // Remplacement de null par un mock
+                new Mock<ILogger<UserManager<IdentityUser>>>().Object // Remplacement de null par un mock
             );
 
             // Mock du HttpContext
@@ -56,21 +58,22 @@ namespace EMGMAND.Tests.ControllersTests
                 .Setup(x => x.CreateAsync(It.IsAny<IdentityUser>()))
                 .ReturnsAsync((IdentityUser user) => new ClaimsPrincipal());
 
-            // Configuration du SignInManager
+            // Configuration du SignInManager avec l'ordre correct des paramètres
             _signInManager = new SignInManager<IdentityUser>(
-                _userManager,
-                mockHttpContextAccessor.Object,
-                mockClaimsFactory.Object,
-                new OptionsManager<IdentityOptions>(
-                    new OptionsFactory<IdentityOptions>(
-                        new List<IConfigureOptions<IdentityOptions>>(),
-                        new List<IPostConfigureOptions<IdentityOptions>>()
-                    )
-                ),
-                null,
-                null,
-                null
-            );
+    _userManager,                                // 1er argument : UserManager<IdentityUser>
+    mockHttpContextAccessor.Object,              // 2e argument : IHttpContextAccessor
+    mockClaimsFactory.Object,                    // 3e argument : IUserClaimsPrincipalFactory<IdentityUser>
+    new OptionsManager<IdentityOptions>(         // 4e argument : IOptions<IdentityOptions>
+        new OptionsFactory<IdentityOptions>(
+            new List<IConfigureOptions<IdentityOptions>>(),
+            new List<IPostConfigureOptions<IdentityOptions>>()
+        )
+    ),
+    new Mock<ILogger<SignInManager<IdentityUser>>>().Object, // 5e argument : ILogger<SignInManager<IdentityUser>>
+    new Mock<IAuthenticationSchemeProvider>().Object, // 6e argument : IAuthenticationSchemeProvider
+    new Mock<IUserConfirmation<IdentityUser>>().Object // 7e argument : IUserConfirmation<IdentityUser>
+);
+
         }
 
         [Fact]
@@ -104,7 +107,7 @@ namespace EMGMAND.Tests.ControllersTests
         }
 
         // Nettoyer les ressources
-        private void Dispose()
+        public void Dispose()
         {
             _context.Database.EnsureDeleted();
             _context.Dispose();
