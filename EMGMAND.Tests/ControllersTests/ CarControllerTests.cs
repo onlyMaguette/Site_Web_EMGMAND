@@ -15,77 +15,105 @@ namespace EMGMAND.Tests.ControllersTests
         public CarControllerTests()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase("TestDatabase")
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
+
             _context = new ApplicationDbContext(options);
 
-            // Ajouter une marque par défaut pour éviter les erreurs de clé étrangère
-            _context.CarBrands.Add(new CarBrand { Id = 1, Name = "Default Brand" });
+            // Nettoyer la base de données
+            _context.Database.EnsureDeleted();
+            _context.Database.EnsureCreated();
+
+            // Ajouter la marque par défaut
+            _context.CarBrands.Add(new CarBrand {Name = "Default Brand" });
             _context.SaveChanges();
-            _controller = new CarController(_context);  // Correction de la syntaxe
+
+            // Get the actual generated Id
+            var defaultBrand = _context.CarBrands.First();
+            _context.ChangeTracker.Clear();
+
+            _controller = new CarController(_context);
         }
 
         [Fact]
         public void AddCar_ValidCar_ReturnsRedirectToActionResult()
         {
+            // Récupérer la marque déjà existante
+            var defaultBrand = _context.CarBrands.First();
+
+            // Créer un nouveau véhicule en réutilisant la marque existante
             var car = new Car
             {
                 Model = "Test Model",
                 Description = "Test Description",
                 Year = 2020,
                 IsSold = false,
-                BrandId = 1,
-                Brand = new CarBrand { Id = 1, Name = "Default Brand" },
+                BrandId = defaultBrand.Id, // Réutiliser l'Id de la marque existante
+                Brand = defaultBrand, // Réutiliser l'instance de la marque existante
                 IsAvailable = true,
                 ManufactureDate = DateTime.Now,
                 PhotoPath = "/images/default.jpg"  // Ajout de PhotoPath
             };
 
+            // Sauvegarder le véhicule dans la base de données
             var result = _controller.SaveCar(car);
+
+            // Vérifier que l'action retourne un Redirection
             Assert.IsType<RedirectToActionResult>(result);
-            var redirectToActionResult = (RedirectToActionResult)result;  // Cast sûr au lieu de 'as'
-            Assert.Equal("Index", redirectToActionResult.ActionName);
+            var redirectToActionResult = (RedirectToActionResult)result;  // Cast sûr
+            Assert.Equal("Index", redirectToActionResult.ActionName);  // Vérifier la redirection vers Index
         }
+
 
         [Fact]
         public void EditCar_ValidData_UpdatesCar()
         {
+            // Récupérer la marque déjà existante
+            var defaultBrand = _context.CarBrands.First();
+
+            // Créer un nouveau véhicule en réutilisant la marque existante
             var car = new Car
             {
-                Id = 1,
                 Model = "Initial Model",
                 Description = "Initial Description",
                 Year = 2021,
                 IsSold = true,
-                BrandId = 1,
-                Brand = new CarBrand { Id = 1, Name = "Default Brand" },
+                BrandId = defaultBrand.Id, // Réutiliser l'Id de la marque existante
+                Brand = defaultBrand, // Réutiliser l'instance de la marque existante
                 IsAvailable = false,
                 ManufactureDate = DateTime.Now,
                 PhotoPath = "/images/default.jpg"  // Ajout de PhotoPath
             };
 
+            // Ajouter le véhicule dans la base de données
             _context.Cars.Add(car);
             _context.SaveChanges();
 
+            // Modifier les données du véhicule
             car.Description = "Updated Description";
+
+            // Sauvegarder les modifications
             _controller.SaveCar(car);
             _context.SaveChanges();
 
-            var updatedCar = _context.Cars.Find(1);
+            // Vérifier que les modifications ont bien été prises en compte
+            var updatedCar = _context.Cars.Find(car.Id);
             Assert.NotNull(updatedCar);
             Assert.Equal("Updated Description", updatedCar.Description);
         }
 
+
         [Fact]
         public void SaveCar_InvalidCar_ReturnsViewWithError()
         {
+            var defaultBrand = _context.CarBrands.First();
             var car = new Car
             {
                 Model = "", // Modèle invalide
                 Year = 2020,
                 IsSold = false,
-                BrandId = 1,
-                Brand = new CarBrand { Id = 1, Name = "Default Brand" },
+                BrandId = defaultBrand.Id,
+                Brand = new CarBrand { Id = defaultBrand.Id, Name = "Default Brand" },
                 IsAvailable = true,
                 ManufactureDate = DateTime.Now,
                 PhotoPath = "/images/default.jpg"  // Ajout de PhotoPath

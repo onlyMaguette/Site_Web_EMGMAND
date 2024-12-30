@@ -17,7 +17,7 @@ namespace EMGMAND.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<Car> Cars { get; set; }
-        public DbSet<CarBrand> CarBrands { get; set; } // Ajout de la table des marques de voitures
+        public DbSet<CarBrand> CarBrands { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -55,5 +55,13 @@ namespace EMGMAND.Data
                       .OnDelete(DeleteBehavior.Cascade);
             });
         }
+
+        // Méthode OnConfiguring pour activer les données sensibles
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            optionsBuilder.EnableSensitiveDataLogging();  // Activer le suivi des données sensibles
+        }
     }
+
 }
