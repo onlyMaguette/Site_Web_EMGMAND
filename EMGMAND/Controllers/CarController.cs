@@ -20,9 +20,31 @@ namespace EMGMAND.Controllers
         {
             ViewBag.CarBrands = _context.CarBrands.ToList();
             if (id == 0)
-                return View(new Car()); // Ajouter une nouvelle voiture
+            {
+                var newCar = new Car
+                {
+                    Model = "",
+                    Year = 2010,
+                    IsSold = false,
+                    IsAvailable = true,
+                    PhotoPath = "",
+                    ManufactureDate = DateTime.Now,
+                    Brand = new CarBrand
+                    {
+                        Name = "Marque par défaut" // Initialisation du membre obligatoire
+                    }
+                };
+                return View(newCar); // Ajouter une nouvelle voiture
+            }
             else
-                return View(_context.Cars.Find(id)); // Modifier une voiture existante
+            {
+                var car = _context.Cars.Find(id);
+                if (car == null)
+                {
+                    return NotFound();
+                }
+                return View(car); // Modifier une voiture existante
+            }
         }
 
         // Action pour sauvegarder les modifications
@@ -32,26 +54,39 @@ namespace EMGMAND.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Validation de l'année de la voiture (doit être supérieure ou égale à 2010)
+                if (string.IsNullOrEmpty(car.Model))
+                {
+                    ModelState.AddModelError("Model", "Le modèle est obligatoire.");
+                }
+
                 if (car.Year < 2010)
                 {
                     ModelState.AddModelError("Year", "L'année de la voiture doit être supérieure ou égale à 2010.");
                 }
 
+                if (car.Brand == null || string.IsNullOrWhiteSpace(car.Brand.Name))
+                {
+                    ModelState.AddModelError("Brand.Name", "Le nom de la marque est obligatoire.");
+                }
+
                 if (ModelState.IsValid)
                 {
                     if (car.Id == 0)
-                        _context.Cars.Add(car); // Ajouter une nouvelle voiture
+                    {
+                        _context.Cars.Add(car);
+                    }
                     else
-                        _context.Cars.Update(car); // Modifier une voiture existante
+                    {
+                        _context.Cars.Update(car);
+                    }
 
                     _context.SaveChanges();
-                    return RedirectToAction(nameof(Index)); // Rediriger vers la liste des voitures
+                    return RedirectToAction(nameof(Index));
                 }
             }
 
             ViewBag.CarBrands = _context.CarBrands.ToList();
-            return View("AddOrEdit", car);
+            return View("CarForm", car);
         }
     }
 }

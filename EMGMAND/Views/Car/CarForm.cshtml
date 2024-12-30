@@ -11,9 +11,9 @@
         <label for="BrandId">Marque</label>
         <select id="BrandId" name="BrandId" class="form-control" asp-for="BrandId">
             <option value="">--Sélectionner une marque--</option>
-            @foreach (var brand in ViewBag.CarBrands as List<EMGMAND.Models.CarBrand>)
+            @foreach (var brand in (ViewBag.CarBrands as List<EMGMAND.Models.CarBrand>) ?? new List<EMGMAND.Models.CarBrand>())
             {
-                <option value="@brand.Id">@brand.Name</option>
+            <option value="@brand.Id">@brand.Name</option>
             }
         </select>
         <span asp-validation-for="BrandId" class="text-danger"></span>

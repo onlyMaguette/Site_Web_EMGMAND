@@ -1,12 +1,18 @@
-﻿namespace EMGMAND.Models;
-
-using System.ComponentModel.DataAnnotations;
-
-public class CarBrand
+﻿namespace EMGMAND.Models
 {
-    public int Id { get; set; } // Identifiant unique de la marque
+    using System.ComponentModel.DataAnnotations;
 
-    [Required(ErrorMessage = "Le nom de la marque est obligatoire.")]
-    [StringLength(50, ErrorMessage = "Le nom de la marque ne peut pas dépasser 50 caractères.")]
-    public string Name { get; set; } // Nom de la marque
+    public class CarBrand
+    {
+        public int Id { get; set; }
+
+        [Required(ErrorMessage = "Le nom de la marque est obligatoire.")]
+        public required string Name { get; set; }
+
+        // Constructeur pour initialiser les membres obligatoires
+        public CarBrand(string name = "")
+        {
+            Name = name;
+        }
+    }
 }
