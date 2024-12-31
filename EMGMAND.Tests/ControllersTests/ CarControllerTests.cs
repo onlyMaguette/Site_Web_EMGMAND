@@ -57,7 +57,7 @@ namespace EMGMAND.Tests.ControllersTests
 
             // Sauvegarder le véhicule dans la base de données
             var result = _controller.SaveCar(car);
-
+             
             // Vérifier que l'action retourne un Redirection
             Assert.IsType<RedirectToActionResult>(result);
             var redirectToActionResult = (RedirectToActionResult)result;  // Cast sûr
