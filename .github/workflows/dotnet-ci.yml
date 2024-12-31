@@ -2,11 +2,9 @@ name: .NET CI
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
   pull_request:
-    branches:
-      - master
+    branches: [ master ]
 
 jobs:
   build:
@@ -14,13 +12,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
+          
+      - name: Clear NuGet cache
+        run: dotnet nuget locals all --clear
+        
       - name: Restore dependencies
-        run: dotnet restore
+        working-directory: EMGMAND
+        run: |
+          dotnet restore
+          dotnet add package Microsoft.TestPlatform.TestHost --version 17.11.1
+          
       - name: Build
-        run: dotnet build --no-restore
-      - name: Run tests
+        working-directory: EMGMAND
+        run: dotnet build
+
+      - name: Test
+        working-directory: EMGMAND
         run: dotnet test
