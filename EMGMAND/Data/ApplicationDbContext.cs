@@ -54,7 +54,29 @@ namespace EMGMAND.Data
                       .HasForeignKey(e => e.BrandId) // Clé étrangère
                       .OnDelete(DeleteBehavior.Cascade);
             });
+
+            // Correction pour MySQL: changer nvarchar(max) en TEXT
+            modelBuilder.Entity<IdentityRole>(entity =>
+            {
+                entity.Property(e => e.ConcurrencyStamp)
+                    .HasColumnType("TEXT");
+            });
+
+            modelBuilder.Entity<IdentityUser>(entity =>
+            {
+                entity.Property(e => e.ConcurrencyStamp)
+                    .HasColumnType("TEXT");
+            });
+
+            modelBuilder.Entity<IdentityUserRole<string>>(entity =>
+            {
+                entity.Property(e => e.RoleId)
+                    .HasColumnType("TEXT");
+                entity.Property(e => e.UserId)
+                    .HasColumnType("TEXT");
+            });
         }
+
 
         // Méthode OnConfiguring pour activer les données sensibles
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
