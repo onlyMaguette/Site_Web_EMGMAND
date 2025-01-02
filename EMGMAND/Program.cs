@@ -16,7 +16,20 @@ namespace EMGMAND
             // Connexion à la base de données
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
+            {
+                options.UseSqlServer(connectionString);
+
+                // Désactiver la journalisation des données sensibles en production
+                if (builder.Environment.IsDevelopment())
+                {
+                    options.EnableSensitiveDataLogging(true); // Activé en développement pour le débogage
+                }
+                else
+                {
+                    options.EnableSensitiveDataLogging(false); // Désactivé en production
+                }
+            });
+
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             // Configuration d'Identity
