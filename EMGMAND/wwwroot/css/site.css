@@ -1,22 +1,30 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
+/* Style global */
 body {
-  margin-bottom: 60px;
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+.hero {
+    background-image: url('/images/hero-car.jpg');
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+}
+
+.features i {
+    font-size: 3rem;
+    color: #007bff;
+}
+
+.features h4 {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+footer {
+    padding: 10px 0;
+    background-color: #343a40;
+    color: white;
 }
