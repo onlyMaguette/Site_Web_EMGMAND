@@ -17,7 +17,8 @@ namespace EMGMAND
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(connectionString);
+                // Utilisation de MySQL/MariaDB
+                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 
                 // Désactiver la journalisation des données sensibles en production
                 if (builder.Environment.IsDevelopment())
@@ -29,6 +30,7 @@ namespace EMGMAND
                     options.EnableSensitiveDataLogging(false); // Désactivé en production
                 }
             });
+
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
