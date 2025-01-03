@@ -1,14 +1,17 @@
 ﻿namespace EMGMAND.Models
 {
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Microsoft.AspNetCore.Http;
 
     public class Car
     {
         public int Id { get; set; }
 
         [Required(ErrorMessage = "La marque est obligatoire.")]
-        public int BrandId { get; set; } // Clé étrangère vers la table des marques
-        public required CarBrand Brand { get; set; } // Propriété de navigation vers la marque
+        public int BrandId { get; set; }
+
+        public required CarBrand Brand { get; set; }
 
         [Required(ErrorMessage = "Le modèle est obligatoire.")]
         [StringLength(50, ErrorMessage = "Le modèle ne peut pas dépasser 50 caractères.")]
@@ -21,8 +24,15 @@
         [StringLength(500, ErrorMessage = "La description ne peut pas dépasser 500 caractères.")]
         public string? Description { get; set; }
 
-        [Url(ErrorMessage = "Veuillez fournir un chemin d'image valide.")]
-        public required string PhotoPath { get; set; }
+        // Propriété pour le fichier uploadé - non mappée dans la base de données
+        [NotMapped]
+        [DataType(DataType.Upload)]
+        [Display(Name = "Photo")]
+        public IFormFile? PhotoFile { get; set; }
+
+        // Propriété pour stocker le chemin de l'image
+        [Display(Name = "Chemin de la photo")]
+        public string? PhotoPath { get; set; }
 
         [Required(ErrorMessage = "Veuillez spécifier si la voiture est vendue.")]
         public required bool IsSold { get; set; }
@@ -35,10 +45,10 @@
         [Display(Name = "Date de fabrication")]
         public required DateTime ManufactureDate { get; set; }
 
-        // Constructeur sans paramètres pour initialisation par défaut
+        // Constructeur sans paramètres
         public Car()
         {
-            BrandId = 0;  // Valeur par défaut
+            BrandId = 0;
             Model = "";
             Year = 2010;
             IsSold = false;
@@ -47,19 +57,18 @@
             ManufactureDate = DateTime.Now;
         }
 
-        // Constructeur pour initialiser les propriétés non-nullables
-        public Car(int brandId = 0, string model = "", int year = 2010, bool isSold = false, bool isAvailable = true, DateTime manufactureDate = default, string description = "", string photoPath = "")
+        // Constructeur avec paramètres
+        public Car(int brandId = 0, string model = "", int year = 2010, bool isSold = false,
+            bool isAvailable = true, DateTime manufactureDate = default, string description = "", string photoPath = "")
         {
             BrandId = brandId;
             Model = model;
             Year = year;
             IsSold = isSold;
             IsAvailable = isAvailable;
-            ManufactureDate = manufactureDate == default ? DateTime.Now : manufactureDate; // Assurez-vous que ManufactureDate est défini
+            ManufactureDate = manufactureDate == default ? DateTime.Now : manufactureDate;
             Description = description ?? "";
             PhotoPath = photoPath ?? "";
         }
-
-
     }
 }
