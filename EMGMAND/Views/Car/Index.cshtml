@@ -1,0 +1,30 @@
+@model IEnumerable<EMGMAND.Models.Car>
+
+    <h2>Inventaire des Voitures</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Modèle</th>
+                <th>Année</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var car in Model)
+        {
+            <tr>
+                <td>@car.Model</td>
+                <td>@car.Year</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@car.Id">Détails</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                    <a asp-action="AddOrEdit" asp-route-id="@car.Id">Modifier</a>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+

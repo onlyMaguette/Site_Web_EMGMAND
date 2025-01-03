@@ -1,11 +1,6 @@
 using EMGMAND.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using MySql.EntityFrameworkCore.Extensions;
-
 
 namespace EMGMAND
 {
@@ -15,56 +10,45 @@ namespace EMGMAND
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Connexion à la base de données
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
-                // Utilisation de MySQL/MariaDB
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-
-                // Désactiver la journalisation des données sensibles en production
-                if (builder.Environment.IsDevelopment())
-                {
-                    options.EnableSensitiveDataLogging(true); // Activé en développement pour le débogage
-                }
-                else
-                {
-                    options.EnableSensitiveDataLogging(false); // Désactivé en production
-                }
+                options.EnableSensitiveDataLogging(builder.Environment.IsDevelopment());
             });
-
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            // Configuration d'Identity
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            // Configuration de l'authentification JWT
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequiredLength = 6;
             })
-            .AddJwtBearer(options =>
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            builder.Services.ConfigureApplicationCookie(options =>
             {
-                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("Jwt:Issuer is required."),
-                    ValidAudience = builder.Configuration["Jwt:Audience"] ?? throw new InvalidOperationException("Jwt:Audience is required."),
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"] ?? throw new InvalidOperationException("Jwt:SecretKey is required.")))
-                };
+                options.LoginPath = "/Identity/Account/Login";
+                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromHours(24);
             });
 
             builder.Services.AddControllersWithViews();
+            builder.Services.AddRazorPages();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            using (var scope = app.Services.CreateScope())
+            {
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+                CreateRoles(roleManager, userManager).Wait();
+            }
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();
@@ -77,20 +61,51 @@ namespace EMGMAND
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
-            // Ajout de l'authentification et autorisation
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // Routes
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
 
             app.Run();
+        }
+
+        private static async Task CreateRoles(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
+        {
+            string[] roleNames = { "Admin", "User" };
+            foreach (var roleName in roleNames)
+            {
+                var roleExist = await roleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
+                {
+                    await roleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+
+            var adminEmail = "admin@gmail.com";
+            var adminUser = await userManager.FindByEmailAsync(adminEmail);
+            if (adminUser == null)
+            {
+                var admin = new IdentityUser
+                {
+                    UserName = adminEmail,
+                    Email = adminEmail,
+                    EmailConfirmed = true
+                };
+
+                var result = await userManager.CreateAsync(admin, "Admin123!");
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(admin, "Admin");
+                }
+            }
+            else if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
+            {
+                await userManager.AddToRoleAsync(adminUser, "Admin");
+            }
         }
     }
 }

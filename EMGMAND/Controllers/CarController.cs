@@ -2,10 +2,10 @@
 using EMGMAND.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace EMGMAND.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class CarController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -15,78 +15,61 @@ namespace EMGMAND.Controllers
             _context = context;
         }
 
-        // Action pour afficher le formulaire d'ajout ou de modification
+        public IActionResult Index()
+        {
+            var cars = _context.Cars.ToList();
+            return View(cars);
+        }
+
+        [Authorize(Roles = "Admin")]
         public IActionResult AddOrEdit(int id = 0)
         {
             ViewBag.CarBrands = _context.CarBrands.ToList();
+
             if (id == 0)
             {
                 var newCar = new Car
                 {
                     Model = "",
-                    Year = 2010,
+                    Year = DateTime.Now.Year,
                     IsSold = false,
                     IsAvailable = true,
                     PhotoPath = "",
                     ManufactureDate = DateTime.Now,
-                    Brand = new CarBrand
-                    {
-                        Name = "Marque par défaut" // Initialisation du membre obligatoire
-                    }
+                    Brand = new CarBrand { Name = "Marque par défaut" }
                 };
-                return View(newCar); // Ajouter une nouvelle voiture
+                return View(newCar);
             }
-            else
+
+            var car = _context.Cars.Find(id);
+            if (car == null)
             {
-                var car = _context.Cars.Find(id);
-                if (car == null)
-                {
-                    return NotFound();
-                }
-                return View(car); // Modifier une voiture existante
+                return NotFound();
             }
+            return View(car);
         }
 
-        // Action pour sauvegarder les modifications
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult SaveCar(Car car)
         {
             if (ModelState.IsValid)
             {
-                if (string.IsNullOrEmpty(car.Model))
+                if (car.Id == 0)
                 {
-                    ModelState.AddModelError("Model", "Le modèle est obligatoire.");
+                    _context.Cars.Add(car);
                 }
-
-                if (car.Year < 2010)
+                else
                 {
-                    ModelState.AddModelError("Year", "L'année de la voiture doit être supérieure ou égale à 2010.");
+                    _context.Cars.Update(car);
                 }
-
-                if (car.Brand == null || string.IsNullOrWhiteSpace(car.Brand.Name))
-                {
-                    ModelState.AddModelError("Brand.Name", "Le nom de la marque est obligatoire.");
-                }
-
-                if (ModelState.IsValid)
-                {
-                    if (car.Id == 0)
-                    {
-                        _context.Cars.Add(car);
-                    }
-                    else
-                    {
-                        _context.Cars.Update(car);
-                    }
-
-                    _context.SaveChanges();
-                    return RedirectToAction(nameof(Index));
-                }
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
             }
 
             ViewBag.CarBrands = _context.CarBrands.ToList();
-            return View("CarForm", car);
+            return View("AddOrEdit", car);
         }
     }
 }
