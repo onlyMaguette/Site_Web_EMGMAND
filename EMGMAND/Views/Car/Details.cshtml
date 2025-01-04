@@ -1,0 +1,83 @@
+@model EMGMAND.Models.Car
+@{
+    ViewData["Title"] = "Détails de la voiture";
+}
+
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">Marque</dt>
+                        <dd class="col-sm-8">@Model.Brand.Name</dd>
+
+                        <dt class="col-sm-4">Modèle</dt>
+                        <dd class="col-sm-8">@Model.Model</dd>
+
+                        <dt class="col-sm-4">Année</dt>
+                        <dd class="col-sm-8">@Model.Year</dd>
+
+                        <dt class="col-sm-4">Date de fabrication</dt>
+                        <dd class="col-sm-8">@Model.ManufactureDate.ToString("dd/MM/yyyy")</dd>
+
+                        <dt class="col-sm-4">Description</dt>
+                        <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.Description) ? "Aucune description" : Model.Description)</dd>
+
+                        <dt class="col-sm-4">Statut</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.IsSold)
+                            {
+                            <span class="badge bg-secondary">Vendue</span>
+                            }
+                            else if (!Model.IsAvailable)
+                            {
+                            <span class="badge bg-warning">Non disponible</span>
+                            }
+                            else
+                            {
+                            <span class="badge bg-success">Disponible</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    @if (!string.IsNullOrEmpty(Model.PhotoPath))
+                    {
+                    <img src="@Model.PhotoPath" alt="Photo du véhicule" class="img-fluid" style="max-height: 300px;" />
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a asp-action="AddOrEdit" asp-route-id="@Model.Id" class="btn btn-primary">Modifier</a>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                Supprimer
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmation de suppression -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmation de suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Êtes-vous sûr de vouloir supprimer cette voiture ?
+            </div>
+            <div class="modal-footer">
+                <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

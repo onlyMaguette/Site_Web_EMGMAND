@@ -1,30 +1,66 @@
 @model IEnumerable<EMGMAND.Models.Car>
+    @{
+    ViewData["Title"] = "Inventaire des Voitures";
+    }
 
-    <h2>Inventaire des Voitures</h2>
+    <div class="container mt-4">
+        <h2>@ViewData["Title"]</h2>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Modèle</th>
-                <th>Année</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var car in Model)
-        {
-            <tr>
-                <td>@car.Model</td>
-                <td>@car.Year</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@car.Id">Détails</a>
-                    @if (User.IsInRole("Admin"))
-                    {
-                    <a asp-action="AddOrEdit" asp-route-id="@car.Id">Modifier</a>
-                    }
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
+        @if (User.IsInRole("Admin"))
+    {
+        <p>
+            <a asp-action="AddOrEdit" class="btn btn-primary mb-3">Ajouter une nouvelle voiture</a>
+        </p>
+    }
 
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Marque</th>
+                        <th>Modèle</th>
+                        <th>Année</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Brand.Name</td>
+                        <td>@item.Model</td>
+                        <td>@item.Year</td>
+                        <td>
+                            @if (item.IsSold)
+                            {
+                            <span class="badge bg-secondary">Vendue</span>
+                            }
+                            else if (!item.IsAvailable)
+                            {
+                            <span class="badge bg-warning">Non disponible</span>
+                            }
+                            else
+                            {
+                            <span class="badge bg-success">Disponible</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">
+                                    Détails
+                                </a>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                <a asp-action="AddOrEdit" asp-route-id="@item.Id" class="btn btn-primary btn-sm">
+                                    Modifier
+                                </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>

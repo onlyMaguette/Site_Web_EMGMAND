@@ -24,6 +24,26 @@ namespace EMGMAND.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var car = await _context.Cars
+                .Include(c => c.Brand)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (car == null)
+            {
+                return NotFound();
+            }
+
+            return View(car);
+        }
+
+        [Authorize(Roles = "Admin")]
         public IActionResult AddOrEdit(int id = 0)
         {
             ViewBag.CarBrands = _context.CarBrands.ToList();
@@ -60,7 +80,6 @@ namespace EMGMAND.Controllers
         {
             try
             {
-                // Récupération et association de la marque
                 var brand = await _context.CarBrands.FindAsync(car.BrandId);
                 if (brand == null)
                 {
@@ -70,7 +89,6 @@ namespace EMGMAND.Controllers
                 }
                 car.Brand = brand;
 
-                // Gestion de l'upload de fichier
                 if (photoFile != null && photoFile.Length > 0)
                 {
                     var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
@@ -135,6 +153,38 @@ namespace EMGMAND.Controllers
                 ModelState.AddModelError("", "Une erreur s'est produite lors de la sauvegarde : " + ex.Message);
                 ViewBag.CarBrands = _context.CarBrands.ToList();
                 return View("AddOrEdit", car);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var car = await _context.Cars.FindAsync(id);
+            if (car == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                if (!string.IsNullOrEmpty(car.PhotoPath) && car.PhotoPath != "/images/default-car.jpg")
+                {
+                    var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, car.PhotoPath.TrimStart('/'));
+                    if (System.IO.File.Exists(imagePath))
+                    {
+                        System.IO.File.Delete(imagePath);
+                    }
+                }
+
+                _context.Cars.Remove(car);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction(nameof(Index), new { error = "Erreur lors de la suppression : " + ex.Message });
             }
         }
     }
