@@ -58,94 +58,84 @@ namespace EMGMAND.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> SaveCar([Bind("Id,BrandId,Model,Year,Description,IsSold,IsAvailable,ManufactureDate,PhotoPath")] Car car, IFormFile? photoFile)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
+                // Récupération et association de la marque
+                var brand = await _context.CarBrands.FindAsync(car.BrandId);
+                if (brand == null)
                 {
-                    // Gestion de l'upload de fichier
-                    if (photoFile != null && photoFile.Length > 0)
+                    ModelState.AddModelError("BrandId", "Marque invalide");
+                    ViewBag.CarBrands = _context.CarBrands.ToList();
+                    return View("AddOrEdit", car);
+                }
+                car.Brand = brand;
+
+                // Gestion de l'upload de fichier
+                if (photoFile != null && photoFile.Length > 0)
+                {
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                    var fileExtension = Path.GetExtension(photoFile.FileName).ToLowerInvariant();
+
+                    if (!allowedExtensions.Contains(fileExtension))
                     {
-                        // Vérification du type de fichier
-                        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-                        var fileExtension = Path.GetExtension(photoFile.FileName).ToLowerInvariant();
-
-                        if (!allowedExtensions.Contains(fileExtension))
-                        {
-                            ModelState.AddModelError("PhotoFile", "Seuls les fichiers JPG, JPEG et PNG sont autorisés.");
-                            ViewBag.CarBrands = _context.CarBrands.ToList();
-                            return View("AddOrEdit", car);
-                        }
-
-                        // Création du nom de fichier unique
-                        var uniqueFileName = Guid.NewGuid().ToString() + fileExtension;
-                        var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-
-                        // Création du dossier s'il n'existe pas
-                        if (!Directory.Exists(uploadsFolder))
-                        {
-                            Directory.CreateDirectory(uploadsFolder);
-                        }
-
-                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                        // Sauvegarde du fichier
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await photoFile.CopyToAsync(stream);
-                        }
-
-                        // Mise à jour du chemin dans le modèle
-                        car.PhotoPath = "/images/" + uniqueFileName;
-                    }
-                    else if (car.Id == 0 && string.IsNullOrEmpty(car.PhotoPath))
-                    {
-                        car.PhotoPath = "/images/default-car.jpg";
-                    }
-
-                    // Récupération et association de la marque
-                    var brand = await _context.CarBrands.FindAsync(car.BrandId);
-                    if (brand == null)
-                    {
-                        ModelState.AddModelError("BrandId", "Marque invalide");
+                        ModelState.AddModelError("PhotoFile", "Seuls les fichiers JPG, JPEG et PNG sont autorisés.");
                         ViewBag.CarBrands = _context.CarBrands.ToList();
                         return View("AddOrEdit", car);
                     }
-                    car.Brand = brand;
 
-                    if (car.Id == 0)
+                    var uniqueFileName = Guid.NewGuid().ToString() + fileExtension;
+                    var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+
+                    if (!Directory.Exists(uploadsFolder))
                     {
-                        _context.Cars.Add(car);
-                    }
-                    else
-                    {
-                        var existingCar = await _context.Cars
-                            .AsNoTracking()
-                            .FirstOrDefaultAsync(c => c.Id == car.Id);
-
-                        if (existingCar == null)
-                        {
-                            return NotFound();
-                        }
-
-                        if (photoFile == null)
-                        {
-                            car.PhotoPath = existingCar.PhotoPath;
-                        }
-
-                        _context.Cars.Update(car);
+                        Directory.CreateDirectory(uploadsFolder);
                     }
 
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await photoFile.CopyToAsync(stream);
+                    }
+
+                    car.PhotoPath = "/images/" + uniqueFileName;
                 }
-                catch (Exception ex)
+                else if (car.Id == 0 && string.IsNullOrEmpty(car.PhotoPath))
                 {
-                    ModelState.AddModelError("", "Une erreur s'est produite lors de la sauvegarde. " + ex.Message);
+                    car.PhotoPath = "/images/default-car.jpg";
                 }
-            }
 
-            ViewBag.CarBrands = _context.CarBrands.ToList();
-            return View("AddOrEdit", car);
+                if (car.Id == 0)
+                {
+                    await _context.Cars.AddAsync(car);
+                }
+                else
+                {
+                    var existingCar = await _context.Cars
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(c => c.Id == car.Id);
+
+                    if (existingCar == null)
+                    {
+                        return NotFound();
+                    }
+
+                    if (photoFile == null)
+                    {
+                        car.PhotoPath = existingCar.PhotoPath;
+                    }
+
+                    _context.Entry(car).State = EntityState.Modified;
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Une erreur s'est produite lors de la sauvegarde : " + ex.Message);
+                ViewBag.CarBrands = _context.CarBrands.ToList();
+                return View("AddOrEdit", car);
+            }
         }
     }
 }
