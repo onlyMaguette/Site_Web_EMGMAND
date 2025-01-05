@@ -1,66 +1,65 @@
 ﻿@model EMGMAND.Models.Car
 
-@{
-    ViewData["Title"] = Model.Id == 0 ? "Ajouter une voiture" : "Modifier une voiture";
-}
+<div class="container mt-4">
+    <h2>@(Model.Id == 0 ? "Ajouter une voiture" : "Modifier une voiture")</h2>
 
-<h2>@ViewData["Title"]</h2>
+    <form asp-action="SaveCar" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <!-- Important : Ajouter ce champ caché pour l'ID -->
+        <input type="hidden" asp-for="Id" />
 
-<form asp-action="SaveCar" enctype="multipart/form-data" method="post">
-    <div class="form-group">
-        <label for="BrandId">Marque</label>
-        <select id="BrandId" name="BrandId" class="form-control" asp-for="BrandId">
-            <option value="">--Sélectionner une marque--</option>
-            @foreach (var brand in (ViewBag.CarBrands as List<EMGMAND.Models.CarBrand>) ?? new List<EMGMAND.Models.CarBrand>())
-            {
-            <option value="@brand.Id">@brand.Name</option>
-            }
-        </select>
-        <span asp-validation-for="BrandId" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="BrandId">Marque</label>
+            <select asp-for="BrandId" class="form-control">
+                <option value="">--Sélectionner une marque--</option>
+                @foreach (var brand in ViewBag.CarBrands)
+                {
+                <option value="@brand.Id" selected="@(brand.Id == Model.BrandId)">@brand.Name</option>
+                }
+            </select>
+        </div>
 
-    <div class="form-group">
-        <label for="Model">Modèle</label>
-        <input type="text" id="Model" name="Model" class="form-control" asp-for="Model" />
-        <span asp-validation-for="Model" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Model">Modèle</label>
+            <input asp-for="Model" class="form-control" />
+        </div>
 
-    <div class="form-group">
-        <label for="Year">Année</label>
-        <input type="number" id="Year" name="Year" class="form-control" asp-for="Year" min="2010" />
-        <span asp-validation-for="Year" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Year">Année</label>
+            <input asp-for="Year" class="form-control" />
+        </div>
 
-    <div class="form-group">
-        <label for="ManufactureDate">Date de fabrication</label>
-        <input type="date" id="ManufactureDate" name="ManufactureDate" class="form-control" asp-for="ManufactureDate" />
-        <span asp-validation-for="ManufactureDate" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="ManufactureDate">Date de fabrication</label>
+            <input asp-for="ManufactureDate" class="form-control" type="date" />
+        </div>
 
-    <div class="form-group">
-        <label for="Description">Description</label>
-        <textarea id="Description" name="Description" class="form-control" asp-for="Description"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Description">Description</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="PhotoFile" class="control-label">Photo</label>
-        <input type="file" name="photoFile" class="form-control" accept=".jpg,.jpeg,.png" />
-        @if (!string.IsNullOrEmpty(Model.PhotoPath))
-        {
-        <img src="@Model.PhotoPath" style="max-width: 200px; margin-top: 10px;" />
-        }
-    </div>
+        <!-- Important : Ajouter ce champ caché pour conserver le chemin de la photo existante -->
+        <input type="hidden" asp-for="PhotoPath" />
 
-    <div class="form-group">
-        <label for="IsSold">Vendu</label>
-        <input type="checkbox" id="IsSold" name="IsSold" asp-for="IsSold" />
-    </div>
+        <div class="form-group">
+            <label for="photoFile">Photo</label>
+            <input type="file" name="photoFile" id="photoFile" class="form-control" />
+        </div>
 
-    <div class="form-group">
-        <label for="IsAvailable">Disponible</label>
-        <input type="checkbox" id="IsAvailable" name="IsAvailable" asp-for="IsAvailable" />
-    </div>
+        <div class="form-check">
+            <input asp-for="IsSold" class="form-check-input" />
+            <label asp-for="IsSold" class="form-check-label">Vendu</label>
+        </div>
 
-    <button type="submit" class="btn btn-primary">Enregistrer</button>
-</form>
+        <div class="form-check">
+            <input asp-for="IsAvailable" class="form-check-input" />
+            <label asp-for="IsAvailable" class="form-check-label">Disponible</label>
+        </div>
+
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+        </div>
+    </form>
+</div>
