@@ -24,195 +24,6 @@ body {
     color: #333;
 }
 
-/* Style de l'en-tête héroïque */
-.hero {
-    background-image: linear-gradient(rgba(255, 209, 220, 0.7), rgba(255, 228, 225, 0.7)), url('/images/hero-car.jpg');
-    background-size: cover;
-    background-position: center;
-    border-radius: 20px;
-    margin: 20px;
-    padding: 100px 0;
-    box-shadow: 0 20px 60px rgba(219, 112, 147, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    text-align: center;
-    position: relative;
-}
-
-    .hero h1 {
-        font-size: 4rem;
-        color: var(--soft-white);
-        font-weight: bold;
-        margin: 0;
-        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-        letter-spacing: 1px;
-    }
-
-    .hero::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 20px;
-        z-index: -1;
-    }
-
-    .hero:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 70px rgba(219, 112, 147, 0.4);
-    }
-
-/* Section des fonctionnalités */
-.features {
-    padding: 60px 30px;
-    background-color: var(--soft-white);
-    border-radius: 25px;
-    margin: 40px 20px;
-    box-shadow: 0 15px 50px rgba(219, 112, 147, 0.15);
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-}
-
-    .features i {
-        font-size: 4.5rem;
-        color: var(--accent-pink);
-        transition: all 0.3s ease;
-        margin-bottom: 15px;
-        background: linear-gradient(135deg, var(--golden-glow), var(--highlight-pink));
-        -webkit-background-clip: text;
-        color: transparent;
-    }
-
-        .features i:hover {
-            transform: scale(1.1);
-            color: var(--dark-pink);
-        }
-
-    .features h4 {
-        margin-top: 20px;
-        font-weight: 700;
-        color: var(--dark-pink);
-        font-size: 1.8rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .features p {
-        color: #666;
-        line-height: 1.8;
-        font-size: 1.1rem;
-        transition: color 0.3s ease;
-    }
-
-    .features:hover p {
-        color: var(--dark-pink);
-    }
-
-/* Footer fixe */
-footer {
-    background: linear-gradient(to right, var(--dark-pink), var(--accent-pink));
-    color: var(--soft-white);
-    padding: 25px 0;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    box-shadow: 0 -5px 25px rgba(219, 112, 147, 0.2);
-    text-align: center;
-    z-index: 10;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-}
-
-/* Contenu principal */
-main {
-    flex: 1;
-    margin-bottom: 120px; /* Espace pour le footer */
-    padding: 20px;
-}
-
-/* Media Queries */
-@media screen and (max-width: 1200px) {
-    .hero {
-        padding: 80px 0;
-    }
-
-    .features {
-        margin: 35px;
-        padding: 50px 25px;
-    }
-}
-
-@media screen and (max-width: 992px) {
-    .hero {
-        padding: 60px 0;
-    }
-
-    .features i {
-        font-size: 4rem;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .hero {
-        padding: 50px 0;
-        margin: 15px;
-    }
-
-    .features {
-        margin: 20px;
-        padding: 45px 25px;
-    }
-
-        .features h4 {
-            font-size: 1.5rem;
-        }
-}
-
-@media screen and (max-width: 576px) {
-    body {
-        font-size: 1rem;
-    }
-
-    .hero {
-        margin: 5px;
-        padding: 40px 0;
-    }
-
-    .features {
-        margin: 10px;
-        padding: 30px 20px;
-    }
-
-        .features i {
-            font-size: 3rem;
-        }
-
-    footer {
-        font-size: 1rem;
-    }
-}
-
-/* Animations douces */
-.fade-in {
-    animation: fadeIn 1s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 /* Style des boutons */
 button, .btn {
     background: linear-gradient(45deg, var(--accent-pink), var(--dark-pink));
@@ -245,6 +56,76 @@ button, .btn {
         z-index: -1;
     }
 
+/* Organisation des groupes de boutons */
+.btn-group {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+    /* Espacement optimal des boutons */
+    .btn-group button {
+        margin: 5px;
+    }
+
+/* Adaptation des boutons pour petits écrans */
+@media screen and (max-width: 768px) {
+    button, .btn {
+        font-size: 1rem;
+        padding: 12px 25px;
+        border-radius: 25px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    button, .btn {
+        font-size: 0.9rem;
+        padding: 10px 20px;
+        border-radius: 20px;
+    }
+}
+
+/* Tables responsives */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 20px 0;
+}
+
+    .table-responsive table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table-responsive th, .table-responsive td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid var(--light-pink);
+    }
+
+    .table-responsive th {
+        background-color: var(--very-light-pink);
+        color: var(--dark-pink);
+    }
+
+/* Animations douces */
+.fade-in {
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* Effets de survol doux */
 .hover-effect {
     transition: all 0.3s ease;
@@ -255,3 +136,25 @@ button, .btn {
         box-shadow: 0 6px 20px rgba(219, 112, 147, 0.2);
         background-color: rgba(255, 255, 255, 0.1);
     }
+
+/* Footer fixe */
+footer {
+    background: linear-gradient(to right, var(--dark-pink), var(--accent-pink));
+    color: var(--soft-white);
+    padding: 25px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -5px 25px rgba(219, 112, 147, 0.2);
+    text-align: center;
+    z-index: 10;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+/* Contenu principal */
+main {
+    flex: 1;
+    margin-bottom: 120px; /* Espace pour le footer */
+    padding: 20px;
+}
