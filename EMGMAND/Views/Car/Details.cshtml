@@ -51,10 +51,13 @@
             </div>
         </div>
         <div class="card-footer">
+            @if (User.IsInRole("Admin"))
+    {
             <a asp-action="AddOrEdit" asp-route-id="@Model.Id" class="btn btn-primary">Modifier</a>
             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
                 Supprimer
             </button>
+    }
             <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
         </div>
     </div>

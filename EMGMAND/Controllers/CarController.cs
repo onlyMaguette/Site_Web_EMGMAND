@@ -23,7 +23,6 @@ namespace EMGMAND.Controllers
             return View(cars);
         }
 
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
