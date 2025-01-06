@@ -17,7 +17,11 @@
         </div>
         <div class="form-group">
             <label asp-for="Model">Modèle</label>
-            <input asp-for="Model" class="form-control" required />
+            <input asp-for="Model" class="form-control" required
+                   pattern="^[A-Za-z0-9].*$"
+                   oninvalid="validateModel(this)"
+                   oninput="this.setCustomValidity('')"
+                   maxlength="100" />
             <span asp-validation-for="Model" class="text-danger"></span>
         </div>
         <div class="form-group">
@@ -69,6 +73,22 @@
         function updateSoldStatus(availableCheckbox) {
             if (availableCheckbox.checked) {
                 document.getElementById('@Html.IdFor(m => m.IsSold)').checked = false;
+            }
+        }
+    
+        function validateModel(input) 
+        {
+            // Vérifier si le champ est vide
+            if (input.value.trim() === "") {
+                input.setCustomValidity('Veuillez remplir ce champ');
+            }
+            // Vérifier si le modèle commence par une lettre ou un chiffre
+            else if (!/^[A-Za-z0-9]/.test(input.value)) {
+                input.setCustomValidity('Le modèle doit commencer par une lettre ou un chiffre');
+            }
+            // Sinon, réinitialiser le message d'erreur
+            else {
+                input.setCustomValidity('');
             }
         }
     </script>
