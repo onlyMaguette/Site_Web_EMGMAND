@@ -1,16 +1,3 @@
-/* Variables pour les couleurs */
-:root {
-    --primary-pink: #FFD1DC;
-    --secondary-pink: #FFE4E1;
-    --accent-pink: #FF69B4;
-    --soft-white: #FFFAF0;
-    --dark-pink: #DB7093;
-    --light-pink: #FAD0C4;
-    --very-light-pink: #FFEDF0;
-    --highlight-pink: #FAD8D3; /* Nouvelle couleur accentuée */
-    --golden-glow: #FFD700; /* Nouvelle couleur pour la surbrillance dorée */
-}
-
 /* Style global */
 body {
     font-family: 'Quicksand', 'Arial', sans-serif;
@@ -24,7 +11,114 @@ body {
     color: #333;
 }
 
+/* Variables pour les couleurs */
+:root {
+    /* Garder les couleurs roses existantes */
+    --primary-pink: #FFD1DC;
+    --secondary-pink: #FFE4E1;
+    --accent-pink: #FF69B4;
+    --soft-white: #FFFAF0;
+    --dark-pink: #DB7093;
+    --light-pink: #FAD0C4;
+    --very-light-pink: #FFEDF0;
+    --highlight-pink: #FAD8D3;
+    --golden-glow: #FFD700;
+    /* Nouvelles couleurs pour les boutons d'action */
+    --details-blue: #17a2b8;
+    --modify-orange: #FFD1DC;
+    --delete-red: #dc3545;
+    --back-gray: #6c757d;
+}
+
 /* Style des boutons */
+
+/* Bouton Ajouter une nouvelle voiture */
+a[href*="AddOrEdit"]:not([class*="btn-modify"]) {
+    background: linear-gradient(45deg, var(--accent-pink), var(--dark-pink));
+    color: var(--soft-white);
+    text-decoration: none;
+}
+
+/* Boutons roses (login, logout, ajouter) */
+.btn-auth,
+button[type="submit"],
+a[href*="AddOrEdit"]:not([class*="btn-modify"]) {
+    background: linear-gradient(45deg, var(--accent-pink), var(--dark-pink));
+    color: var(--soft-white);
+}
+
+/* Bouton Détails */
+.btn-info,
+a[href*="Details"] {
+    background: linear-gradient(45deg, var(--details-blue), #138496);
+    color: var(--soft-white);
+}
+
+/* Bouton Modifier */
+.btn-modify,
+a[href*="AddOrEdit"][class*="btn-primary"] {
+    background: linear-gradient(45deg, var(--modify-orange), #f57c00);
+    color: var(--soft-white);
+}
+
+/* Bouton Supprimer */
+.btn-danger,
+button[data-bs-target="#deleteModal"] {
+    background: linear-gradient(45deg, var(--delete-red), #c82333);
+    color: var(--soft-white);
+}
+
+/* Bouton Supprimer (rouge renforcé) */
+.modal-footer .btn-danger {
+    background: linear-gradient(45deg, var(--delete-red), #c82333);
+    color: var(--soft-white);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+    .modal-footer .btn-danger:hover {
+        background: linear-gradient(45deg, #c82333, #a71d2a); /* Rouge plus foncé au survol */
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+    }
+
+/* Bouton Annuler (bleu explicite) */
+.modal-footer .btn-outline-secondary {
+    background: linear-gradient(45deg, var(--details-blue), #138496);
+    color: var(--soft-white);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+    .modal-footer .btn-outline-secondary:hover {
+        background: linear-gradient(45deg, #138496, #0d6e77); /* Bleu plus foncé au survol */
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(23, 162, 184, 0.3);
+    }
+
+/* Bouton Retour */
+.btn-outline-secondary {
+    background: linear-gradient(45deg, var(--back-gray), #5a6268);
+    color: var(--soft-white);
+}
+
+a.btn.btn-secondary {
+    background: var(--back-gray); /* Couleur grise */
+    color: var(--soft-white); /* Texte blanc */
+    border: 1px solid #5a6268; /* Bordure grise */
+    transition: all 0.3s ease;
+}
+
+a.btn.btn-secondary:hover {
+    background: #5a6268; /* Couleur grise plus sombre au survol */
+    color: var(--soft-white); /* Texte blanc */
+    border-color: #495057; /* Bordure légèrement plus sombre */
+    filter: brightness(110%);
+    transform: translateY(-5px); /* Légère élévation au survol */
+}
+
+
+/* Style commun pour tous les boutons */
 button, .btn {
     background: linear-gradient(45deg, var(--accent-pink), var(--dark-pink));
     border: none;
@@ -38,22 +132,25 @@ button, .btn {
     position: relative;
 }
 
-    button:hover, .btn:hover {
-        transform: translateY(-7px);
-        box-shadow: 0 12px 35px rgba(219, 112, 147, 0.3);
-        background: linear-gradient(45deg, var(--dark-pink), var(--accent-pink));
+/* Bouton Retour (style spécifique pour une couleur grise explicite) */
+.btn-outline-secondary {
+    background: linear-gradient(45deg, var(--back-gray), #5a6268); /* Couleur grise */
+    color: var(--soft-white);
+    border: 1px solid #5a6268; /* Bordure grise */
+}
+
+    /* Effet hover pour le bouton Retour */
+    .btn-outline-secondary:hover {
+        background: linear-gradient(45deg, #5a6268, #495057); /* Teinte légèrement plus sombre au survol */
+        border-color: #495057;
+        filter: brightness(110%);
     }
 
-    button::before, .btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 30px;
-        z-index: -1;
+    /* Effet hover commun */
+    button:hover, .btn:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        filter: brightness(110%);
     }
 
 /* Organisation des groupes de boutons */
