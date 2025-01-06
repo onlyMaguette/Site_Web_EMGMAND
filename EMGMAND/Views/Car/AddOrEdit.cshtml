@@ -1,65 +1,75 @@
 ﻿@model EMGMAND.Models.Car
-
 <div class="container mt-4">
     <h2>@(Model.Id == 0 ? "Ajouter une voiture" : "Modifier une voiture")</h2>
-
     <form asp-action="SaveCar" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
-        <!-- Important : Ajouter ce champ caché pour l'ID -->
         <input type="hidden" asp-for="Id" />
-
         <div class="form-group">
             <label asp-for="BrandId">Marque</label>
-            <select asp-for="BrandId" class="form-control">
+            <select asp-for="BrandId" class="form-control" required>
                 <option value="">--Sélectionner une marque--</option>
                 @foreach (var brand in ViewBag.CarBrands)
                 {
                 <option value="@brand.Id" selected="@(brand.Id == Model.BrandId)">@brand.Name</option>
                 }
             </select>
+            <span asp-validation-for="BrandId" class="text-danger"></span>
         </div>
-
         <div class="form-group">
             <label asp-for="Model">Modèle</label>
-            <input asp-for="Model" class="form-control" />
+            <input asp-for="Model" class="form-control" required />
+            <span asp-validation-for="Model" class="text-danger"></span>
         </div>
-
         <div class="form-group">
             <label asp-for="Year">Année</label>
-            <input asp-for="Year" class="form-control" />
+            <input asp-for="Year" class="form-control" required />
+            <span asp-validation-for="Year" class="text-danger"></span>
         </div>
-
         <div class="form-group">
             <label asp-for="ManufactureDate">Date de fabrication</label>
-            <input asp-for="ManufactureDate" class="form-control" type="date" />
+            <input asp-for="ManufactureDate" class="form-control" type="date" required />
+            <span asp-validation-for="ManufactureDate" class="text-danger"></span>
         </div>
-
         <div class="form-group">
             <label asp-for="Description">Description</label>
-            <textarea asp-for="Description" class="form-control"></textarea>
+            <textarea asp-for="Description" class="form-control" required></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
         </div>
-
-        <!-- Important : Ajouter ce champ caché pour conserver le chemin de la photo existante -->
         <input type="hidden" asp-for="PhotoPath" />
-
         <div class="form-group">
             <label for="photoFile">Photo</label>
-            <input type="file" name="photoFile" id="photoFile" class="form-control" />
+            <input type="file" name="photoFile" id="photoFile" class="form-control" required="@(Model.Id == 0)" />
+            <span class="text-danger field-validation-valid" data-valmsg-for="photoFile"></span>
         </div>
-
-        <div class="form-check">
-            <input asp-for="IsSold" class="form-check-input" />
-            <label asp-for="IsSold" class="form-check-label">Vendu</label>
+        <div class="form-group mt-3">
+            <div class="form-check">
+                <input asp-for="IsSold" class="form-check-input" onchange="updateAvailability(this)" />
+                <label asp-for="IsSold" class="form-check-label">Vendu</label>
+            </div>
+            <div class="form-check">
+                <input asp-for="IsAvailable" class="form-check-input" onchange="updateSoldStatus(this)" />
+                <label asp-for="IsAvailable" class="form-check-label">Disponible</label>
+            </div>
         </div>
-
-        <div class="form-check">
-            <input asp-for="IsAvailable" class="form-check-input" />
-            <label asp-for="IsAvailable" class="form-check-label">Disponible</label>
-        </div>
-
         <div class="mt-3">
             <button type="submit" class="btn btn-primary">Enregistrer</button>
             <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
         </div>
     </form>
 </div>
+
+@section Scripts {
+    <script>
+        function updateAvailability(soldCheckbox) {
+            if (soldCheckbox.checked) {
+                document.getElementById('@Html.IdFor(m => m.IsAvailable)').checked = false;
+            }
+        }
+
+        function updateSoldStatus(availableCheckbox) {
+            if (availableCheckbox.checked) {
+                document.getElementById('@Html.IdFor(m => m.IsSold)').checked = false;
+            }
+        }
+    </script>
+}
