@@ -20,21 +20,10 @@
         <hr class="my-4">
 
         <div class="row mt-4">
-            <div class="col-md-4">
-                <div class="card">
-                    <img src="/images/view-inventory.png" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            Inventaire
-                        </h5>
-                        <p class="card-text">Consultez toutes les voitures disponibles dans notre inventaire.</p>
-                        <a href="@Url.Action("Index", "Car")" class="btn btn-primary">Accéder</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <img src="/images/add-car.png" class="card-img-top">
+            <!-- Carte Ajouter une voiture -->
+            <div class="col-md-6">
+                <div class="card hover-effect">
+                    <img src="/images/add-car.png" class="card-img-top" alt="Ajouter une voiture">
                     <div class="card-body">
                         <h5 class="card-title">Ajouter une voiture</h5>
                         <p class="card-text">Ajoutez une nouvelle voiture à notre inventaire.</p>
@@ -42,16 +31,31 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <img src="/images/manage-listings.png" class="card-img-top">
+
+            <!-- Carte Inventaire -->
+            <div class="col-md-6">
+                <div class="card hover-effect">
+                    <img src="/images/view-inventory.png" class="card-img-top" alt="Inventaire">
                     <div class="card-body">
-                        <h5 class="card-title">Gérer les annonces</h5>
-                        <p class="card-text">Modifiez ou supprimez les annonces de voitures.</p>
-                        <a href="@Url.Action("Index", "Car")" class="btn btn-success">Gérer</a>
+                        <h5 class="card-title">Inventaire</h5>
+                        <p class="card-text">Consultez toutes les voitures disponibles dans notre inventaire.</p>
+                        <a href="@Url.Action("Index", "Car")" class="btn btn-primary">Accéder</a>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+            @*<div class="col-md-4">
+            <div class="card">
+                <img src="/images/manage-listings.png" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">Gérer les annonces</h5>
+                    <p class="card-text">Modifiez ou supprimez les annonces de voitures.</p>
+                    <a href="@Url.Action("Index", "Car")" class="btn btn-success">Gérer</a>
+                </div>
+            </div>
+        </div>*@
         </div>
         </div>
     </div>

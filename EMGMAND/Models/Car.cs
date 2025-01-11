@@ -24,7 +24,7 @@
         [StringLength(500, ErrorMessage = "La description ne peut pas dépasser 500 caractères.")]
         public string? Description { get; set; }
 
-        // Propriété pour le fichier uploadé - non mappée dans la base de données
+
         [NotMapped]
         [DataType(DataType.Upload)]
         [Display(Name = "Photo")]
@@ -45,7 +45,6 @@
         [Display(Name = "Date de fabrication")]
         public required DateTime ManufactureDate { get; set; }
 
-        // Constructeur sans paramètres
         public Car()
         {
             BrandId = 0;
@@ -57,7 +56,6 @@
             ManufactureDate = DateTime.Now;
         }
 
-        // Constructeur avec paramètres
         public Car(int brandId = 0, string model = "", int year = 2010, bool isSold = false,
             bool isAvailable = true, DateTime manufactureDate = default, string description = "", string photoPath = "")
         {

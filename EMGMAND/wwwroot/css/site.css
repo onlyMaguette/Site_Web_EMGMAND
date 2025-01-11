@@ -109,13 +109,13 @@ a.btn.btn-secondary {
     transition: all 0.3s ease;
 }
 
-a.btn.btn-secondary:hover {
-    background: #5a6268; /* Couleur grise plus sombre au survol */
-    color: var(--soft-white); /* Texte blanc */
-    border-color: #495057; /* Bordure légèrement plus sombre */
-    filter: brightness(110%);
-    transform: translateY(-5px); /* Légère élévation au survol */
-}
+    a.btn.btn-secondary:hover {
+        background: #5a6268; /* Couleur grise plus sombre au survol */
+        color: var(--soft-white); /* Texte blanc */
+        border-color: #495057; /* Bordure légèrement plus sombre */
+        filter: brightness(110%);
+        transform: translateY(-5px); /* Légère élévation au survol */
+    }
 
 
 /* Style commun pour tous les boutons */
@@ -146,12 +146,12 @@ button, .btn {
         filter: brightness(110%);
     }
 
-    /* Effet hover commun */
-    button:hover, .btn:hover {
-        transform: translateY(-7px);
-        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
-        filter: brightness(110%);
-    }
+/* Effet hover commun */
+button:hover, .btn:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+    filter: brightness(110%);
+}
 
 /* Organisation des groupes de boutons */
 .btn-group {
@@ -254,4 +254,125 @@ main {
     flex: 1;
     margin-bottom: 120px; /* Espace pour le footer */
     padding: 20px;
+}
+
+/* Style des cartes */
+.card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background: var(--soft-white);
+    margin-bottom: 20px;
+}
+
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
+.card-img-top {
+    height: 250px;
+    object-fit: cover;
+    border-bottom: 1px solid var(--light-pink);
+}
+
+.card-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--dark-pink);
+    margin-bottom: 15px;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Style des boutons dans les cartes */
+.card .btn {
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card .btn-success {
+    background: linear-gradient(45deg, var(--accent-pink), var(--dark-pink));
+    color: var(--soft-white);
+}
+
+.card .btn-primary {
+    background: linear-gradient(45deg, var(--details-blue), #138496);
+    color: var(--soft-white);
+}
+
+.card .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    filter: brightness(110%);
+}
+
+/* Style global de la page */
+.container.text-center.mt-5 {
+    margin-top: 50px;
+}
+
+h1.display-4 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--dark-pink);
+    margin-bottom: 20px;
+}
+
+p.lead {
+    font-size: 1.25rem;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+hr.my-4 {
+    border-top: 2px solid var(--light-pink);
+    margin: 40px auto;
+    width: 50%;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 15px;
+    }
+
+    .card-img-top {
+        height: 220px;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+    }
+
+    .card .btn {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+
+    h1.display-4 {
+        font-size: 2rem;
+    }
+
+    p.lead {
+        font-size: 1rem;
+    }
 }
