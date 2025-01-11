@@ -39,7 +39,7 @@ a[href*="AddOrEdit"]:not([class*="btn-modify"]) {
     text-decoration: none;
 }
 
-/* Boutons roses (login, logout, ajouter) */
+/* Boutons roses */
 .btn-auth,
 button[type="submit"],
 a[href*="AddOrEdit"]:not([class*="btn-modify"]) {
@@ -68,7 +68,7 @@ button[data-bs-target="#deleteModal"] {
     color: var(--soft-white);
 }
 
-/* Bouton Supprimer (rouge renforcé) */
+/* Bouton Supprimer */
 .modal-footer .btn-danger {
     background: linear-gradient(45deg, var(--delete-red), #c82333);
     color: var(--soft-white);
@@ -82,7 +82,7 @@ button[data-bs-target="#deleteModal"] {
         box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
     }
 
-/* Bouton Annuler (bleu explicite) */
+/* Bouton Annuler */
 .modal-footer .btn-outline-secondary {
     background: linear-gradient(45deg, var(--details-blue), #138496);
     color: var(--soft-white);
@@ -103,18 +103,18 @@ button[data-bs-target="#deleteModal"] {
 }
 
 a.btn.btn-secondary {
-    background: var(--back-gray); /* Couleur grise */
-    color: var(--soft-white); /* Texte blanc */
-    border: 1px solid #5a6268; /* Bordure grise */
+    background: var(--back-gray); 
+    color: var(--soft-white); 
+    border: 1px solid #5a6268; 
     transition: all 0.3s ease;
 }
 
     a.btn.btn-secondary:hover {
-        background: #5a6268; /* Couleur grise plus sombre au survol */
-        color: var(--soft-white); /* Texte blanc */
-        border-color: #495057; /* Bordure légèrement plus sombre */
+        background: #5a6268; 
+        color: var(--soft-white); 
+        border-color: #495057; 
         filter: brightness(110%);
-        transform: translateY(-5px); /* Légère élévation au survol */
+        transform: translateY(-5px);
     }
 
 
@@ -132,11 +132,11 @@ button, .btn {
     position: relative;
 }
 
-/* Bouton Retour (style spécifique pour une couleur grise explicite) */
+/* Bouton Retour */
 .btn-outline-secondary {
-    background: linear-gradient(45deg, var(--back-gray), #5a6268); /* Couleur grise */
+    background: linear-gradient(45deg, var(--back-gray), #5a6268);
     color: var(--soft-white);
-    border: 1px solid #5a6268; /* Bordure grise */
+    border: 1px solid #5a6268;s
 }
 
     /* Effet hover pour le bouton Retour */
@@ -311,7 +311,7 @@ main {
 }
 
 .card .btn-primary {
-    background: linear-gradient(45deg, var(--details-blue), #138496);
+    background: linear-gradient(45deg, var(--accent-pink), var(--dark-pink));
     color: var(--soft-white);
 }
 
@@ -320,6 +320,27 @@ main {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
     filter: brightness(110%);
 }
+
+/* Style pour centrer et embellir le titre */
+.container.mt-4 h2 {
+    text-align: center; 
+    font-size: 2.5rem; 
+    font-weight: 700; 
+    color: var(--dark-pink); 
+    margin-bottom: 30px;
+    padding: 10px 0; 
+    position: relative; 
+}
+
+    .container.mt-4 h2::after {
+        content: '';
+        display: block;
+        width: 100px; 
+        height: 4px; 
+        background: var(--accent-pink);
+        margin: 10px auto 0;
+        border-radius: 2px;
+    }
 
 /* Style global de la page */
 .container.text-center.mt-5 {
@@ -375,4 +396,25 @@ hr.my-4 {
     p.lead {
         font-size: 1rem;
     }
+
+    /* Style pour centrer et embellir le titre */
+    .container.mt-4 h2 {
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--dark-pink);
+        margin-bottom: 30px;
+        padding: 10px 0;
+        position: relative;
+    }
+
+        .container.mt-4 h2::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: var(--accent-pink);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
 }
