@@ -20,7 +20,9 @@
         <hr class="my-4">
 
         <div class="row mt-4">
-            <!-- Carte Ajouter une voiture -->
+            <!-- Carte Ajouter une voiture (visible uniquement par l'admin) -->
+            @if (User.IsInRole("Admin"))
+    {
             <div class="col-md-6">
                 <div class="card hover-effect">
                     <img src="/images/add-car.png" class="card-img-top" alt="Ajouter une voiture">
@@ -31,8 +33,9 @@
                     </div>
                 </div>
             </div>
+    }
 
-            <!-- Carte Inventaire -->
+            <!-- Carte Inventaire (visible par tous) -->
             <div class="col-md-6">
                 <div class="card hover-effect">
                     <img src="/images/view-inventory.png" class="card-img-top" alt="Inventaire">

@@ -342,6 +342,33 @@ main {
         border-radius: 2px;
     }
 
+/* Style pour une seule carte */
+.row.mt-4 .col-md-6:only-child {
+    max-width: 600px; 
+    margin: 0 auto; 
+    flex: 0 0 100%; 
+}
+
+    /* Ajustement de la taille de l'image pour une seule carte */
+    .row.mt-4 .col-md-6:only-child .card-img-top {
+        height: 300px;
+    }
+
+    
+    .row.mt-4 .col-md-6:only-child .card-title {
+        font-size: 2rem; 
+    }
+
+    .row.mt-4 .col-md-6:only-child .card-text {
+        font-size: 1.25rem; 
+    }
+
+    /* Ajustement du bouton pour une seule carte */
+    .row.mt-4 .col-md-6:only-child .btn {
+        font-size: 1.25rem; 
+        padding: 12px 30px; 
+    }
+
 /* Style global de la page */
 .container.text-center.mt-5 {
     margin-top: 50px;
@@ -416,5 +443,32 @@ hr.my-4 {
             background: var(--accent-pink);
             margin: 10px auto 0;
             border-radius: 2px;
+        }
+
+    /* Style pour une seule carte  */
+    .row.mt-4 .col-md-6:only-child {
+        max-width: 600px; 
+        margin: 0 auto; 
+        flex: 0 0 100%; 
+    }
+
+        /* Ajustement de la taille de l'image pour une seule carte */
+        .row.mt-4 .col-md-6:only-child .card-img-top {
+            height: 300px; 
+        }
+
+
+        .row.mt-4 .col-md-6:only-child .card-title {
+            font-size: 2rem; /* Taille du titre augmentée */
+        }
+
+        .row.mt-4 .col-md-6:only-child .card-text {
+            font-size: 1.25rem; 
+        }
+
+        /* Ajustement du bouton pour une seule carte */
+        .row.mt-4 .col-md-6:only-child .btn {
+            font-size: 1.25rem; 
+            padding: 12px 30px;
         }
 }
