@@ -115,4 +115,3 @@ Pour arrêter l'application, vous pouvez simplement appuyer sur **Ctrl + C** dan
 
 - Si vous souhaitez déployer l'application en production, pensez à configurer correctement votre serveur web (par exemple, Nginx, Apache) et à utiliser des variables d'environnement pour la configuration des clés secrètes et des informations sensibles.
 - Assurez-vous que votre base de données MySQL/MariaDB est bien sécurisée et que les informations de connexion ne sont pas exposées publiquement.
-- 
