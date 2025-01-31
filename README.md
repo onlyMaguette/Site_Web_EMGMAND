@@ -9,7 +9,7 @@ Avant d'exécuter l'application, vous devez avoir installé les éléments suiva
 - [.NET SDK](https://dotnet.microsoft.com/download/dotnet) (version 6.0 ou plus récente)
 - [MySQL ou MariaDB](https://dev.mysql.com/downloads/installer/) (ou un autre système de gestion de base de données compatible avec MySQL)
 - [Visual Studio](https://visualstudio.microsoft.com/downloads/) ou un autre éditeur de code compatible avec .NET (comme VS Code)
-- [XAMPP ou WAMP](https://www.apachefriends.org/index.html) pour la gestion facile de MySQL sous Windows
+- [XAMPP ou WAMP](https://www.apachefriends.org/) si vous utilisez Windows pour gérer MySQL facilement
 
 ## Étapes pour exécuter l'application en local
 
@@ -25,9 +25,9 @@ git clone https://github.com/onlyMaguette/Site_Web_EMGMAND.git
 
 Avant de configurer la base de données, assurez-vous que votre **serveur MySQL** est en cours d'exécution. Vous pouvez vérifier son statut et le démarrer si nécessaire :
 
-#### Sous Windows (XAMPP ou WAMP) :
+#### Sous Windows (XAMPP) :
 
-- Ouvrez le panneau de configuration XAMPP ou WAMP et cliquez sur **Start** pour MySQL.
+- Ouvrez le panneau de configuration XAMPP et cliquez sur **Start** pour MySQL.
 
 #### Sous Linux/Mac :
 
@@ -101,7 +101,13 @@ dotnet ef database update
 
 ### 7. Exécuter l'application
 
-Une fois la base de données configurée et les migrations appliquées, démarrez l'application avec :
+Avant d'exécuter l'application, assurez-vous d'être dans le dossier contenant la solution EMGMAND.sln :
+
+```bash
+cd EMGMAND
+```
+
+Ensuite, démarrez l'application avec :
 
 ```bash
 dotnet run
@@ -134,6 +140,4 @@ Si vous rencontrez des erreurs, consultez les logs dans la console. En mode dév
 Pour arrêter l'application, appuyez sur **Ctrl + C** dans la console.
 
 ## Informations supplémentaires
-
-- Pour le déploiement en production, configurez correctement votre serveur web (Nginx, Apache) et utilisez des variables d'environnement pour les clés secrètes.
 - Assurez-vous que votre base de données MySQL/MariaDB est bien sécurisée et que les informations de connexion ne sont pas exposées publiquement.
