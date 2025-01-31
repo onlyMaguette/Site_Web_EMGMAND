@@ -141,3 +141,4 @@ Pour arrêter l'application, appuyez sur **Ctrl + C** dans la console.
 
 ## Informations supplémentaires
 - Assurez-vous que votre base de données MySQL/MariaDB est bien sécurisée et que les informations de connexion ne sont pas exposées publiquement.
+  
